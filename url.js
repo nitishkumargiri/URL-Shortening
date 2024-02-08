@@ -1,13 +1,21 @@
-const express = require("express");
-const {
-  handleGenerateNewShortURL,
-  handleGetAnalytics,
-} = require("../controllers/url");
+const mongoose = require("mongoose");
 
-const router = express.Router();
+const urlSchema = new mongoose.Schema(
+  {
+    shortId: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    redirectURL: {
+      type: String,
+      required: true,
+    },
+    visitHistory: [{ timestamp: { type: Number } }],
+  },
+  { timestamps: true }
+);
 
-router.post("/", handleGenerateNewShortURL);
+const URL = mongoose.model("url", urlSchema);
 
-router.get("/analytics/:shortId", handleGetAnalytics);
-
-module.exports = router;
+module.exports = URL;
